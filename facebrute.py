@@ -44,7 +44,6 @@ HEADERS = {
 }
 
 DATA = {
-    "charset_test": "%E2%82%AC%2C%C2%B4%2C%E2%82%AC%2C%C2%B4%2C%E6%B0%B4%2C%D0%94%2C%D0%84",
     "return_session": 0, 
     "legacy_return": 1, 
     "display": "", 
