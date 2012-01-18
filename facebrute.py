@@ -33,6 +33,7 @@ import getopt
 import sys
 import httplib
 import urllib
+import re
 
 HEADERS = {
     "Content-type": "application/x-www-form-urlencoded", 
@@ -133,6 +134,9 @@ def parse_args(argv):
             elif opt in ("-e", "--encoding"):
                 options["encoding"] = arg
             elif opt in ("-P", "--proxy"):
+                if not re.search("^(\w+|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):\d+$", arg):
+                    raise Exception("Invalid format for proxy, should be host:port")
+
                 options["proxy"] = arg
             elif opt in ("-h", "--help"):
                 options["help"] = True
