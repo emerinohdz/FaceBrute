@@ -25,4 +25,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Usage:
 
-facebrute.py -u username -p passdb.list [-e encoding]
+facebrute.py -u username -p passdb.list [-e encoding] [-P proxy:port]
